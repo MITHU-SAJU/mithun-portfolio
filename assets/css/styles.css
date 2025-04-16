@@ -148,7 +148,7 @@ img {
 }
 
 .section__title {
-  font-size: var(--h1-font-size);
+  font-size: 18px;
   color: var(--title-color);
 }
 
@@ -164,6 +164,10 @@ img {
 }
 
 /*==================== LAYOUT ====================*/
+a {
+  text-decoration: none;
+  font-size: 18px;
+}
 .container {
   max-width: 768px;
   margin-left: var(--mb-1-5);
@@ -235,7 +239,7 @@ img {
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: var(--small-font-size);
+  font-size:18px;
   color: var(--title-color);
   font-weight: var(--font-medium);
 }
@@ -412,6 +416,7 @@ img {
 .about__description {
   text-align: center;
   margin-bottom: var(--mb-2-5);
+  font-size: 16px;
 }
 
 .about__info {
@@ -442,185 +447,100 @@ img {
 }
 
 /*==================== SKILLS ====================*/
-.skills__container {
-  row-gap: 0;
+
+.skills-section {
+  padding: 60px 0;
+  background: linear-gradient(135deg, #fdfdfd, #f1f3f8);
 }
 
-.skills__header {
-  display: flex;
-  align-items: center;
-  margin-bottom: var(--mb-2-5);
-  cursor: pointer;
+.skills-section .section-title {
+  font-size: 36px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
-.skills__icon,
-.skills__arrow {
-  font-size: 2rem;
-  color: var(--first-color);
+.skills-section .section-subtitle {
+  text-align: center;
+  margin-bottom: 50px;
+  font-size: 18px;
+  color: #666;
 }
 
-.skills__icon {
-  margin-right: var(--mb-0-75);
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
 }
 
-.skills__title {
-  font-size: var(--h3-font-size);
+.skill-card {
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease;
 }
 
-.skills__subtitle {
-  font-size: var(--small-font-size);
-  color: var(--text-color-light);
+.skill-card:hover {
+  transform: translateY(-6px);
 }
 
-.skills__arrow {
-  margin-left: auto;
-  transition: .4s;
-}
-
-.skills__list {
-  row-gap: 1.5rem;
-  padding-left: 2.7rem;
-}
-
-.skills__titles {
+.skill-title {
+  font-size: 18px;
+  font-weight: 600;
   display: flex;
   justify-content: space-between;
-  margin-bottom: var(--mb-0-5);
 }
 
-.skills__name {
-  font-size: var(--normal-font-size);
-  font-weight: var(--font-medium);
+.progress {
+  height: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
 }
 
-.skills__bar,
-.skills__percentage {
-  height: 5px;
-  border-radius: .25rem;
+.progress-bar {
+  transition: width 1.2s ease-in-out;
 }
 
-.skills__bar {
-  background-color: var(--first-color-lighter);
+@media (max-width: 576px) {
+  .skill-title {
+    font-size: 16px;
+  }
 }
-
-.skills__percentage {
-  display: block;
-  background-color: var(--first-color);
-}
-
 /*========== SKILL 1 ==========*/
 
-.skills__swift {
-  width: 40%;
-}
+
 
 .skills__sql {
   width: 80%;
 }
 
-.skills__python {
+.skills__html {
   width: 90%;
 }
-
-.skills__r {
-  width: 60%;
+.skills__css {
+  width: 80%;
 }
+.skills__react {
+  width: 70%;
+}
+
 
 .skills__js {
   width: 70%;
 }
 
-.skills__java {
-  width: 60%;
-}
+
 
 /*========== SKILL 2 ==========*/
 
-.skills__np {
-  width: 85%;
-}
 
-.skills__pd {
-  width: 80%;
-}
 
-.skills__plt {
-  width: 70%;
-}
 
-.skills__sk {
-  width: 70%;
-}
-
-.skills__sea {
-  width: 60%;
-}
-
-.skills__cv {
-  width: 70%;
-}
-
-.skills__flask {
-  width: 70%;
-}
-
-.skills__streamlit {
-  width: 60%;
-}
-
-.skills__tf {
-  width: 85%;
-}
-
-.skills__pytorch {
-  width: 80%;
-}
-
-.skills__ntlk {
-  width: 80%;
-}
-
-.skills__trax{
-  width: 40%;
-}
 
 /*========== SKILL 3 ==========*/
 
-.skills__lr {
-  width: 85%;
-}
 
-.skills__dt {
-  width: 70%;
-}
-
-.skills__eda {
-  width: 80%;
-}
-
-.skills__ts {
-  width: 70%;
-}
-
-.skills__cnn {
-  width: 90%;
-}
-
-.skills__nlp {
-  width: 90%;
-}
-
-.skills__em {
-  width: 60%;
-}
-
-.skills__rs {
-  width: 60%;
-}
-
-.skills__mml {
-  width: 70%;
-}
 
 /*========== SKILL 3 ==========*/
 
@@ -628,9 +548,7 @@ img {
   width: 65%;
 }
 
-.skills__docker {
-  width: 70%;
-}
+
 
 /*========== SKILL 5 ==========*/
 
@@ -642,13 +560,6 @@ img {
   width: 70%;
 }
 
-.skills__tableau {
-  width: 60%;
-}
-
-.skills__powerbi {
-  width: 75%;
-}
 
 
 .skills__close .skills__list {
@@ -701,7 +612,7 @@ img {
 .qualification__subtitle {
   padding-top: 3px;
   display: inline-block;
-  font-size: small;
+  font-size: 14px;
 }
 
 .qualification__calendar {
@@ -997,7 +908,9 @@ img {
   background-color: rgb(79, 162, 116);
   animation: status 4s ease forwards;
 }
-
+.skills section{
+  align-items: center;
+}
 #contact__status.error {
   background-color: rgb(201, 88, 88);
   animation: status 4s ease forwards;
