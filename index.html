@@ -512,100 +512,62 @@
     <!--==================== FONTAWESOME ====================-->
     <script src="https://kit.fontawesome.com/b58a420f20.js" crossorigin="anonymous"></script>
     <script type="module">
-        /* ------------------ IMPORTS ------------------ */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { 
-    getFirestore, 
-    doc, 
-    getDoc, 
-    collection, 
-    getDocs 
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
-/* ---------------- FIREBASE CONFIG ---------------- */
+// Firebase setup
 const firebaseConfig = {
   apiKey: "AIzaSyDLPUtK-NGtlOQUdS_Fe19NqcRiz3eFeCk",
   authDomain: "portfolio-update-cc2b4.firebaseapp.com",
   projectId: "portfolio-update-cc2b4",
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* ============================================================
-   =============== LOAD ABOUT SECTION ==========================
-   ============================================================ */
-
+/* ===================== LOAD ABOUT ===================== */
 async function loadAbout() {
-  const snap = await getDoc(doc(db, "portfolio", "content"));
+  const snap = await getDoc(doc(db, "about", "aboutData"));
   if (!snap.exists()) return;
 
-  const data = snap.data();
+  const d = snap.data();
 
-  // Bio
-  document.getElementById("pBio").innerHTML = data.bio;
+  document.getElementById("pBio").innerHTML = d.bio;
+  document.querySelector("#about .about__info-title").innerText = d.experience;
+  document.querySelectorAll("#about .about__info-title")[1].innerText = d.projectsDone;
 
-  // Experience & Projects Completed
-  const infoCards = document.querySelectorAll("#about .about__info-title");
-  infoCards[0].innerText = data.experience;
-  infoCards[1].innerText = data.projectsCompleted;
-
-  // Profile Image
-  if (data.profileImg) {
-    document.querySelector(".about__img").src = data.profileImg;
-  }
-
-  // Resume Button
-  if (data.resumePdf) {
-    document.querySelector(".about__buttons a").href = data.resumePdf;
-  }
+  if (d.aboutImg) document.querySelector(".about__img").src = d.aboutImg;
+  if (d.resumeUrl) document.querySelector(".about__buttons a").href = d.resumeUrl;
 }
 
-/* ============================================================
-   =============== LOAD SKILLS SECTION =========================
-   ============================================================ */
-
+/* ===================== LOAD SKILLS ===================== */
 async function loadSkills() {
-  // ---------- Technical Skills ----------
-  const snapTech = await getDoc(doc(db, "portfolio", "skillsTechnical"));
-  if (snapTech.exists()) {
-    const techSkills = snapTech.data().skills ?? [];
+  const snap = await getDoc(doc(db, "skills", "skillsData"));
+  if (!snap.exists()) return;
 
-    const techContainer = document.querySelector(".skill-card:nth-child(1) .skill-grid");
-    techContainer.innerHTML = "";
+  const d = snap.data();
 
-    techSkills.forEach(skill => {
-      techContainer.innerHTML += `<div class="skill-item">${skill}</div>`;
-    });
-  }
+  // Technical
+  const tech = document.querySelector(".skill-card:nth-child(1) .skill-grid");
+  tech.innerHTML = "";
+  d.technical.forEach(s => tech.innerHTML += `<div class="skill-item">${s}</div>`);
 
-  // ---------- Tools ----------
-  const snapTools = await getDoc(doc(db, "portfolio", "skillsTools"));
-  if (snapTools.exists()) {
-    const tools = snapTools.data().skills ?? [];
-
-    const toolsContainer = document.querySelector(".skill-card:nth-child(2) .skill-grid");
-    toolsContainer.innerHTML = "";
-
-    tools.forEach(tool => {
-      toolsContainer.innerHTML += `<div class="skill-item">${tool}</div>`;
-    });
-  }
+  // Tools
+  const tools = document.querySelector(".skill-card:nth-child(2) .skill-grid");
+  tools.innerHTML = "";
+  d.tools.forEach(s => tools.innerHTML += `<div class="skill-item">${s}</div>`);
 }
 
-/* ============================================================
-   =============== LOAD PROJECTS SECTION =======================
-   ============================================================ */
-
+/* ===================== LOAD PROJECTS ===================== */
 async function loadProjects() {
-  const querySnap = await getDocs(collection(db, "portfolio", "projects", "items"));
-  const container = document.querySelector(".swiper-wrapper");
-  container.innerHTML = "";
+  const snap = await getDoc(doc(db, "projects", "projectsData"));
+  if (!snap.exists()) return;
 
-  querySnap.forEach(docSnap => {
-    const p = docSnap.data();
+  const list = snap.data().projects || [];
+  const box = document.querySelector(".swiper-wrapper");
 
-    container.innerHTML += `
+  box.innerHTML = "";
+  list.forEach(p => {
+    box.innerHTML += `
       <div class="projects__content grid swiper-slide">
         <img src="${p.img}" class="projects__img" />
 
@@ -613,36 +575,28 @@ async function loadProjects() {
           <h3 class="projects__title">${p.title}</h3>
           <p class="projects__description">${p.desc}</p>
 
-          <a href="${p.link}" target="_blank"
-             class="button button--flex button--small projects__button">
-            ${p.buttonText}
+          <a href="${p.link}" class="button button--flex button--small projects__button" target="_blank">
+            ${p.linkText}
             <i class="uil uil-arrow-right button__icon"></i>
           </a>
         </div>
-      </div>
-    `;
+      </div>`;
   });
 
-  // Restart Swiper
   new Swiper(".projects__container", {
     loop: true,
-    spaceBetween: 24,
     grabCursor: true,
-    pagination: {
-      el: ".swiper-pagination",
-      clickable: true,
-    },
-    navigation: {
-      nextEl: ".swiper-button-next",
-      prevEl: ".swiper-button-prev",
-    }
+    spaceBetween: 24,
+    pagination: { el: ".swiper-pagination", clickable: true },
+    navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
   });
 }
 
-/* ===================== EXECUTE ALL LOADERS ==================== */
+/* ===================== RUN ===================== */
 loadAbout();
 loadSkills();
 loadProjects();
+
 
 </script>
 
