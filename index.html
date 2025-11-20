@@ -134,7 +134,7 @@
                     </div>
 
                     <div class="home__data">
-                        <h1 class="home__title">
+                        <h1 class="home__title" id="pName">
                             hi, <span class="home__colored-text">Mithun</span> here.<span
                                 class="home__colored-text"></span>
                         </h1>
@@ -169,7 +169,7 @@
                 <img src="assets/img/general/illustration.png" alt="About section background image" class="about__img">
 
                 <div class="about__data">
-                    <p class="about__description">
+                    <p class="about__description" id="pBio">
                         I'm currently an Full Stack Developer Intern at
                         <a href="https://sii-group.com/fr-FR/sii-est" class="home__colored-text">CTRL-NEXT
                             Technologies</a>,
@@ -628,6 +628,38 @@
     <script src="assets/js/main.js"></script>
     <!--==================== FONTAWESOME ====================-->
     <script src="https://kit.fontawesome.com/b58a420f20.js" crossorigin="anonymous"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDLPUtK-NGtlOQUdS_Fe19NqcRiz3eFeCk",
+    authDomain: "portfolio-update-cc2b4.firebaseapp.com",
+    projectId: "portfolio-update-cc2b4",
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const docRef = doc(db, "portfolio", "content");
+
+  async function loadPortfolio() {
+    const snap = await getDoc(docRef);
+    if (snap.exists()) {
+      const data = snap.data();
+
+      document.getElementById("pName").innerText = data.name;
+      document.getElementById("pBio").innerText = data.bio;
+
+      if (data.profileImg) {
+        document.getElementById("pImg").src = data.profileImg;
+      }
+    }
+  }
+
+  loadPortfolio();
+</script>
+
 </body>
 
 </html>
