@@ -169,7 +169,7 @@
                 <img src="assets/img/general/illustration.png" alt="About section background image" class="about__img">
 
                 <div class="about__data">
-                    <p class="about__description" id="pBio">
+                    <p class="about__description" id="">
                         I'm currently an Full Stack Developer Intern at
                         <a href="https://sii-group.com/fr-FR/sii-est" class="home__colored-text">CTRL-NEXT
                             Technologies</a>,
@@ -629,36 +629,122 @@
     <!--==================== FONTAWESOME ====================-->
     <script src="https://kit.fontawesome.com/b58a420f20.js" crossorigin="anonymous"></script>
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+        /* ------------------ IMPORTS ------------------ */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDLPUtK-NGtlOQUdS_Fe19NqcRiz3eFeCk",
-    authDomain: "portfolio-update-cc2b4.firebaseapp.com",
-    projectId: "portfolio-update-cc2b4",
-  };
+/* ---------------- FIREBASE CONFIG ---------------- */
+const firebaseConfig = {
+  apiKey: "AIzaSyDLPUtK-NGtlOQUdS_Fe19NqcRiz3eFeCk",
+  authDomain: "portfolio-update-cc2b4.firebaseapp.com",
+  projectId: "portfolio-update-cc2b4",
+};
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-  const docRef = doc(db, "portfolio", "content");
+/* ============================================================
+   =============== LOAD ABOUT SECTION ==========================
+   ============================================================ */
 
-  async function loadPortfolio() {
-    const snap = await getDoc(docRef);
-    if (snap.exists()) {
-      const data = snap.data();
+async function loadAbout() {
+  const snap = await getDoc(doc(db, "portfolio", "about"));
+  if (!snap.exists()) return;
 
-      document.getElementById("pName").innerText = data.name;
-      document.getElementById("pBio").innerText = data.bio;
+  const data = snap.data();
 
-      if (data.profileImg) {
-        document.getElementById("pImg").src = data.profileImg;
-      }
-    }
+  document.getElementById("pBio").innerHTML = data.bio;
+  document.querySelector("#about .about__info-title").innerText = data.experience;
+  document.querySelectorAll("#about .about__info-title")[1].innerText = data.projectsDone;
+
+  if (data.aboutImg) {
+    document.querySelector(".about__img").src = data.aboutImg;
   }
+  if (data.resumeUrl) {
+    document.querySelector(".about__buttons a").href = data.resumeUrl;
+  }
+}
 
-  loadPortfolio();
+/* ============================================================
+   =============== LOAD SKILLS SECTION =========================
+   ============================================================ */
+
+async function loadSkills() {
+  const snap = await getDoc(doc(db, "portfolio", "skills"));
+  if (!snap.exists()) return;
+
+  const data = snap.data();
+
+  // Technical Skills
+  const techContainer = document.querySelector(".skill-card:nth-child(1) .skill-grid");
+  techContainer.innerHTML = "";
+  data.technical.forEach(skill => {
+    techContainer.innerHTML += `<div class="skill-item">${skill}</div>`;
+  });
+
+  // Tools
+  const toolsContainer = document.querySelector(".skill-card:nth-child(2) .skill-grid");
+  toolsContainer.innerHTML = "";
+  data.tools.forEach(tool => {
+    toolsContainer.innerHTML += `<div class="skill-item">${tool}</div>`;
+  });
+}
+
+/* ============================================================
+   =============== LOAD PROJECTS SECTION =======================
+   ============================================================ */
+
+async function loadProjects() {
+  const snap = await getDoc(doc(db, "portfolio", "projects"));
+  if (!snap.exists()) return;
+
+  const data = snap.data();
+  const list = data.projects;
+
+  const container = document.querySelector(".swiper-wrapper");
+  container.innerHTML = "";
+
+  list.forEach(p => {
+    container.innerHTML += `
+      <div class="projects__content grid swiper-slide">
+        <img src="${p.img}" class="projects__img" />
+
+        <div class="projects__data">
+          <h3 class="projects__title">${p.title}</h3>
+          <p class="projects__description">${p.desc}</p>
+
+          <a href="${p.link}" target="_blank"
+             class="button button--flex button--small projects__button">
+            ${p.linkText}
+            <i class="uil uil-arrow-right button__icon"></i>
+          </a>
+        </div>
+      </div>
+    `;
+  });
+
+  // Reinitialize swiper
+  new Swiper(".projects__container", {
+    loop: true,
+    spaceBetween: 24,
+    grabCursor: true,
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    }
+  });
+}
+
+/* ===================== EXECUTE ALL LOADERS ==================== */
+loadAbout();
+loadSkills();
+loadProjects();
 </script>
+
 
 </body>
 
